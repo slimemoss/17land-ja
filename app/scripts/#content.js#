@@ -6,8 +6,8 @@ const options = {
   subtree: true, //全ての子要素を監視
 }
 
-const overwrite = (data) => {
-  console.log('start')
+const overwrite_all = (data) => {
+  console.log('start nya')
 
   const div = document.querySelectorAll('div.list_card')
 
@@ -39,21 +39,17 @@ const callback_init = (data) => {
 
     const obs = new MutationObserver(() => {
       obs.disconnect()
-      overwrite(data)
+      overwrite_all(data)
       obs.observe(target, options)      
     });
     const target = document.querySelector('div.scrolling-table')
     obs.observe(target, options);
 
-    overwrite(data)
+    overwrite_all(data)
   }
 }
 
 const inner = (data) => {
-  const obs_init = new MutationObserver(() => {
-    obs_init.disconnect()
-    callback_init(data)
-    obs_init.observe(document, options)
   });
   obs_init.observe(document, options);
 }
