@@ -14,8 +14,6 @@
     "all_frames": true,
     "js": ["scripts/content.js"]
   }],
-  "host_permissions": [
-    "*://mtg-name2image-qycdsgzuoa-uc.a.run.app/image"
-  ],
+  "host_permissions": [],
   "permissions": []
 }
