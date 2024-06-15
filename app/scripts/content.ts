@@ -1,14 +1,12 @@
+import URL_DATA from './data/urls.json'
+interface URL_DATA_I {
+  [key: string]: string
+}
 const appendImageAtt = 'data-17lands-ja-image'
 
 const fetchUrls = (names: string[]): string[] => {
-  const url = 'https://mtg-name2image-qycdsgzuoa-uc.a.run.app/image'
-  const body = {format: 'small', cards: names}
-
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", url, false);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send(JSON.stringify(body))
-  return JSON.parse(xhr.responseText)
+  const data: URL_DATA_I = URL_DATA
+  return names.map(n => data[n])
 }
 
 const ImageUrls = new class {
