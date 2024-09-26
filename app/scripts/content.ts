@@ -1,29 +1,32 @@
-import URL_DATA from './data/urls.json'
 interface URL_DATA_I {
   [key: string]: string
 }
-const appendImageAtt = 'data-17lands-ja-image'
+import DSK from './data/dsk.json'
+import BLB from './data/blb.json'
+import SPG from './data/spg.json'
 
-const fetchUrls = (names: string[]): string[] => {
-  const data: URL_DATA_I = URL_DATA
-  return names.map(n => data[n])
+const DataDict: {[key: string]: URL_DATA_I} = {
+  'DSK': DSK,
+  'BLB': BLB,
+  'SPG': SPG
 }
 
+const appendImageAtt = 'data-17lands-ja-image'
+
 const ImageUrls = new class {
-  requestedNames: Set<string> = new Set()
   imageUrls: {[key: string]: string} = {}
 
   constructor() {}
 
-  update(names: string[]) {
-    const unresolved = names.filter(n => !this.requestedNames.has(n))
-    names.forEach(n => this.requestedNames.add(n))
-    if (unresolved.length != 0) {
-      const urls = fetchUrls(unresolved)
-      unresolved.forEach((name, i) => {
-        this.imageUrls[name] = urls[i]
-      })
+  update(expansion: string) {
+    if(!(expansion in DataDict)) {
+      return
     }
+    this.imageUrls = {...this.imageUrls, ...DataDict[expansion]}
+  }
+
+  has(name: string) {
+    return name in this.imageUrls
   }
 
   url(name: string) {
@@ -31,14 +34,23 @@ const ImageUrls = new class {
   }
 }
 
+ImageUrls.update('SPG')
+
 const getNameFromListCardDiv = (div: Element) => {
   return div.querySelector('div.list_card_name')?.textContent ?? ''
 }
 
+const getExpansioin = () => {
+  const select = document.querySelector<HTMLSelectElement>('select#expansion')
+  return select?.value
+}
+
 const cardListHandler = () => {
   const listCardDivs = document.querySelectorAll('div.list_card')
-  const names = [...listCardDivs].map(getNameFromListCardDiv)
-  ImageUrls.update(names)
+  const expansion = getExpansioin()
+  if(expansion) {
+    ImageUrls.update(expansion)
+  }
 
   listCardDivs.forEach(div => {
     let img = div.querySelector('img[' + appendImageAtt + ']')
@@ -50,8 +62,9 @@ const cardListHandler = () => {
     img.setAttribute('hidden', 'true')
 
     const name = getNameFromListCardDiv(div)
-    const url = ImageUrls.url(name)
-    if(url) {
+
+    if(ImageUrls.has(name)){
+      const url = ImageUrls.url(name)
       img.setAttribute('src', url)
       img.removeAttribute('hidden')
     }

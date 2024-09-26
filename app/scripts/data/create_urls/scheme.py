@@ -53,6 +53,32 @@ class ImageUris(BaseModel):
     border_crop: str
 
 
+class Layout(Enum):
+    ADVENTURE = "adventure"
+    ART_SERIES = "art_series"
+    AUGMENT = "augment"
+    CASE = "case"
+    CLASS = "class"
+    DOUBLE_FACED_TOKEN = "double_faced_token"
+    EMBLEM = "emblem"
+    FLIP = "flip"
+    HOST = "host"
+    LEVELER = "leveler"
+    MELD = "meld"
+    MODAL_DFC = "modal_dfc"
+    MUTATE = "mutate"
+    NORMAL = "normal"
+    PLANAR = "planar"
+    PROTOTYPE = "prototype"
+    REVERSIBLE_CARD = "reversible_card"
+    SAGA = "saga"
+    SCHEME = "scheme"
+    SPLIT = "split"
+    TOKEN = "token"
+    TRANSFORM = "transform"
+    VANGUARD = "vanguard"
+
+
 class CardFaceObject(Enum):
     CARD_FACE = "card_face"
 
@@ -60,11 +86,11 @@ class CardFaceObject(Enum):
 class HandModifierEnum(Enum):
     EMPTY = "*"
     FLUFFY = "*²"
-    HAND_MODIFIER = "∞"
+    HAND_MODIFIER = "?"
     HAND_MODIFIER_0 = "-0"
     HAND_MODIFIER_1 = "+1"
     HAND_MODIFIER_2 = "2+*"
-    PURPLE = "?"
+    PURPLE = "∞"
     PURPLE_1 = "*+1"
     THE_0 = "+0"
     THE_1 = "1+*"
@@ -82,20 +108,27 @@ class CardFace(BaseModel):
     object: CardFaceObject
     name: str
     mana_cost: str
+    type_line: str
     oracle_text: str
-    type_line: Optional[str] = None
-    colors: Optional[List[ColorIdentity]] = None
-    artist: Optional[str] = None
-    artist_id: Optional[UUID] = None
-    illustration_id: Optional[UUID] = None
-    image_uris: Optional[ImageUris] = None
     power: Optional[Union[HandModifierEnum, int]] = None
     toughness: Optional[Union[HandModifierEnum, int]] = None
     flavor_text: Optional[str] = None
+    artist: Optional[str] = None
+    artist_id: Optional[UUID] = None
+    illustration_id: Optional[UUID] = None
+    colors: Optional[List[ColorIdentity]] = None
+    defense: Optional[int] = None
+    image_uris: Optional[ImageUris] = None
     color_indicator: Optional[List[ColorIdentity]] = None
     watermark: Optional[str] = None
     loyalty: Optional[int] = None
-    defense: Optional[int] = None
+    printed_name: Optional[str] = None
+    oracle_id: Optional[UUID] = None
+    layout: Optional[Layout] = None
+    cmc: Optional[float] = None
+    flavor_name: Optional[str] = None
+    printed_type_line: Optional[str] = None
+    printed_text: Optional[str] = None
 
 
 class Finish(Enum):
@@ -115,6 +148,7 @@ class FrameEffect(Enum):
     CONVERTDFC = "convertdfc"
     DEVOID = "devoid"
     DRAFT = "draft"
+    ETCHED = "etched"
     EXTENDEDART = "extendedart"
     FANDFC = "fandfc"
     FULLART = "fullart"
@@ -125,10 +159,13 @@ class FrameEffect(Enum):
     MOONELDRAZIDFC = "mooneldrazidfc"
     NYXTOUCHED = "nyxtouched"
     ORIGINPWDFC = "originpwdfc"
+    SHATTEREDGLASS = "shatteredglass"
+    SHOWCASE = "showcase"
     SNOW = "snow"
     SPREE = "spree"
     SUNMOONDFC = "sunmoondfc"
     TOMBSTONE = "tombstone"
+    UPSIDEDOWNDFC = "upsidedowndfc"
     WAXINGANDWANINGMOONDFC = "waxingandwaningmoondfc"
 
 
@@ -143,36 +180,26 @@ class Game(Enum):
 class ImageStatus(Enum):
     HIGHRES_SCAN = "highres_scan"
     LOWRES = "lowres"
+    PLACEHOLDER = "placeholder"
 
 
 class Lang(Enum):
+    AR = "ar"
+    DE = "de"
     EN = "en"
+    ES = "es"
+    FR = "fr"
+    GRC = "grc"
+    HE = "he"
+    IT = "it"
     JA = "ja"
-
-
-class Layout(Enum):
-    ADVENTURE = "adventure"
-    ART_SERIES = "art_series"
-    AUGMENT = "augment"
-    CASE = "case"
-    CLASS = "class"
-    DOUBLE_FACED_TOKEN = "double_faced_token"
-    EMBLEM = "emblem"
-    FLIP = "flip"
-    HOST = "host"
-    LEVELER = "leveler"
-    MELD = "meld"
-    MODAL_DFC = "modal_dfc"
-    MUTATE = "mutate"
-    NORMAL = "normal"
-    PLANAR = "planar"
-    PROTOTYPE = "prototype"
-    SAGA = "saga"
-    SCHEME = "scheme"
-    SPLIT = "split"
-    TOKEN = "token"
-    TRANSFORM = "transform"
-    VANGUARD = "vanguard"
+    KO = "ko"
+    PH = "ph"
+    PT = "pt"
+    RU = "ru"
+    SA = "sa"
+    ZHS = "zhs"
+    ZHT = "zht"
 
 
 class Alchemy(Enum):
@@ -219,30 +246,81 @@ class Preview(BaseModel):
 
 class PromoType(Enum):
     ALCHEMY = "alchemy"
+    ARENALEAGUE = "arenaleague"
     BOOSTERFUN = "boosterfun"
+    BOXTOPPER = "boxtopper"
     BRAWLDECK = "brawldeck"
+    BRINGAFRIEND = "bringafriend"
+    BUNDLE = "bundle"
     BUYABOX = "buyabox"
+    COMMANDERPARTY = "commanderparty"
+    CONCEPT = "concept"
+    CONFETTIFOIL = "confettifoil"
     CONVENTION = "convention"
     DATESTAMPED = "datestamped"
+    DOSSIER = "dossier"
+    DOUBLEEXPOSURE = "doubleexposure"
+    DOUBLERAINBOW = "doublerainbow"
+    DRACULASERIES = "draculaseries"
+    DRAFTWEEKEND = "draftweekend"
+    DUELS = "duels"
+    EMBOSSED = "embossed"
     EVENT = "event"
     FNM = "fnm"
+    GALAXYFOIL = "galaxyfoil"
+    GAMEDAY = "gameday"
+    GIFTBOX = "giftbox"
+    GILDED = "gilded"
+    GLOSSY = "glossy"
+    GODZILLASERIES = "godzillaseries"
+    HALOFOIL = "halofoil"
+    IMAGINE = "imagine"
     INSTORE = "instore"
+    INTROPACK = "intropack"
+    INVISIBLEINK = "invisibleink"
+    JPWALKER = "jpwalker"
+    JUDGEGIFT = "judgegift"
     LEAGUE = "league"
+    MAGNIFIED = "magnified"
+    MEDIAINSERT = "mediainsert"
+    NEONINK = "neonink"
+    OILSLICK = "oilslick"
+    OPENHOUSE = "openhouse"
     PLANESWALKERDECK = "planeswalkerdeck"
     PLASTIC = "plastic"
     PLAYERREWARDS = "playerrewards"
+    PLAYPROMO = "playpromo"
     PLAYTEST = "playtest"
+    PORTRAIT = "portrait"
+    POSTER = "poster"
+    PREMIERESHOP = "premiereshop"
     PRERELEASE = "prerelease"
+    PROMOPACK = "promopack"
+    RAINBOWFOIL = "rainbowfoil"
+    RAISEDFOIL = "raisedfoil"
+    RAVNICACITY = "ravnicacity"
     REBALANCED = "rebalanced"
     RELEASE = "release"
     RIPPLEFOIL = "ripplefoil"
+    SCHINESEALTART = "schinesealtart"
+    SCROLL = "scroll"
+    SERIALIZED = "serialized"
+    SETEXTENSION = "setextension"
     SETPROMO = "setpromo"
+    SILVERFOIL = "silverfoil"
     STAMPED = "stamped"
     STARTERDECK = "starterdeck"
+    STEPANDCOMPLEAT = "stepandcompleat"
+    STORECHAMPIONSHIP = "storechampionship"
     SURGEFOIL = "surgefoil"
+    TEXTURED = "textured"
     THEMEPACK = "themepack"
+    THICK = "thick"
     TOURNEY = "tourney"
     UPSIDEDOWN = "upsidedown"
+    UPSIDEDOWNBACK = "upsidedownback"
+    VAULT = "vault"
+    WIZARDSPLAYNETWORK = "wizardsplaynetwork"
 
 
 class PurchaseUris(BaseModel):
@@ -270,6 +348,7 @@ class RelatedUris(BaseModel):
 class SecurityStamp(Enum):
     ACORN = "acorn"
     ARENA = "arena"
+    CIRCLE = "circle"
     HEART = "heart"
     OVAL = "oval"
     TRIANGLE = "triangle"
@@ -285,13 +364,15 @@ class SetType(Enum):
     DRAFT_INNOVATION = "draft_innovation"
     DUEL_DECK = "duel_deck"
     EXPANSION = "expansion"
+    FROM_THE_VAULT = "from_the_vault"
     FUNNY = "funny"
     MASTERPIECE = "masterpiece"
     MASTERS = "masters"
     MEMORABILIA = "memorabilia"
-    MINIGAME = "minigame"
     PLANECHASE = "planechase"
+    PREMIUM_DECK = "premium_deck"
     PROMO = "promo"
+    SPELLBOOK = "spellbook"
     STARTER = "starter"
     TOKEN = "token"
     TREASURE_CHEST = "treasure_chest"
@@ -301,7 +382,6 @@ class SetType(Enum):
 class SchemeElement(BaseModel):
     object: SchemeObject
     id: UUID
-    oracle_id: UUID
     multiverse_ids: List[int]
     name: str
     lang: Lang
@@ -311,8 +391,6 @@ class SchemeElement(BaseModel):
     layout: Layout
     highres_image: bool
     image_status: ImageStatus
-    cmc: float
-    type_line: str
     color_identity: List[ColorIdentity]
     keywords: List[str]
     legalities: Legalities
@@ -346,37 +424,44 @@ class SchemeElement(BaseModel):
     story_spotlight: bool
     prices: Dict[str, Optional[str]]
     related_uris: RelatedUris
+    oracle_id: Optional[UUID] = None
     mtgo_id: Optional[int] = None
-    mtgo_foil_id: Optional[int] = None
+    arena_id: Optional[int] = None
     tcgplayer_id: Optional[int] = None
-    cardmarket_id: Optional[int] = None
     image_uris: Optional[ImageUris] = None
     mana_cost: Optional[str] = None
+    cmc: Optional[float] = None
+    type_line: Optional[str] = None
     oracle_text: Optional[str] = None
     colors: Optional[List[ColorIdentity]] = None
-    flavor_text: Optional[str] = None
+    produced_mana: Optional[List[ColorIdentity]] = None
     card_back_id: Optional[UUID] = None
     artist_ids: Optional[List[UUID]] = None
     illustration_id: Optional[UUID] = None
-    edhrec_rank: Optional[int] = None
     purchase_uris: Optional[PurchaseUris] = None
-    security_stamp: Optional[SecurityStamp] = None
-    preview: Optional[Preview] = None
+    mtgo_foil_id: Optional[int] = None
+    cardmarket_id: Optional[int] = None
     power: Optional[Union[HandModifierEnum, int]] = None
     toughness: Optional[Union[HandModifierEnum, int]] = None
+    flavor_text: Optional[str] = None
+    edhrec_rank: Optional[int] = None
     penny_rank: Optional[int] = None
-    arena_id: Optional[int] = None
-    promo_types: Optional[List[PromoType]] = None
-    all_parts: Optional[List[AllPart]] = None
-    frame_effects: Optional[List[FrameEffect]] = None
-    produced_mana: Optional[List[ColorIdentity]] = None
-    watermark: Optional[str] = None
     card_faces: Optional[List[CardFace]] = None
-    tcgplayer_etched_id: Optional[int] = None
+    all_parts: Optional[List[AllPart]] = None
+    preview: Optional[Preview] = None
+    security_stamp: Optional[SecurityStamp] = None
+    promo_types: Optional[List[PromoType]] = None
+    watermark: Optional[str] = None
+    frame_effects: Optional[List[FrameEffect]] = None
     loyalty: Optional[str] = None
-    life_modifier: Optional[str] = None
-    hand_modifier: Optional[Union[HandModifierEnum, int]] = None
+    tcgplayer_etched_id: Optional[int] = None
     attraction_lights: Optional[List[int]] = None
     color_indicator: Optional[List[ColorIdentity]] = None
+    flavor_name: Optional[str] = None
+    life_modifier: Optional[str] = None
+    hand_modifier: Optional[Union[HandModifierEnum, int]] = None
     content_warning: Optional[bool] = None
-    defense: Optional[int] = None
+    printed_name: Optional[str] = None
+    printed_type_line: Optional[str] = None
+    printed_text: Optional[str] = None
+    variation_of: Optional[UUID] = None
