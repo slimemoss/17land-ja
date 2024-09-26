@@ -1,28 +1,40 @@
 interface URL_DATA_I {
   [key: string]: string
 }
-import DSK from './data/dsk.json'
-import BLB from './data/blb.json'
-import SPG from './data/spg.json'
 
-const DataDict: {[key: string]: URL_DATA_I} = {
-  'DSK': DSK,
-  'BLB': BLB,
-  'SPG': SPG
+const DataDict: {[key: string]: string} = {
+  'DSK': 'dsk.json',
+  'BLB': 'blb.json',
+  'SPG': 'spg.json',
 }
+Object.keys(DataDict).forEach(key => {
+  DataDict[key] = 'https://raw.githubusercontent.com/slimemoss/17land-ja/refs/heads/url_data_from_githubraw/public_data/' + DataDict[key]
+});
 
 const appendImageAtt = 'data-17lands-ja-image'
 
+async function fetchData(expansion: string) {
+  const response = await fetch(DataDict[expansion])
+  const res: URL_DATA_I = await response.json()
+  return res
+}
+
 const ImageUrls = new class {
   imageUrls: {[key: string]: string} = {}
+  fetched = new Set<string>()
 
   constructor() {}
 
-  update(expansion: string) {
+  async update(expansion: string) {
+    if(this.fetched.has(expansion)) {
+      return
+    }
     if(!(expansion in DataDict)) {
       return
     }
-    this.imageUrls = {...this.imageUrls, ...DataDict[expansion]}
+    const data = await fetchData(expansion)
+    this.fetched.add(expansion)
+    this.imageUrls = {...this.imageUrls, ...data}
   }
 
   has(name: string) {
@@ -33,8 +45,6 @@ const ImageUrls = new class {
     return this.imageUrls[name]
   }
 }
-
-ImageUrls.update('SPG')
 
 const getNameFromListCardDiv = (div: Element) => {
   return div.querySelector('div.list_card_name')?.textContent ?? ''
@@ -48,26 +58,28 @@ const getExpansioin = () => {
 const cardListHandler = () => {
   const listCardDivs = document.querySelectorAll('div.list_card')
   const expansion = getExpansioin()
-  if(expansion) {
-    ImageUrls.update(expansion)
+  if(expansion == undefined) {
+    return
   }
 
-  listCardDivs.forEach(div => {
-    let img = div.querySelector('img[' + appendImageAtt + ']')
-    if(img == null) {
-      img = document.createElement('img')
-      div.appendChild(img)
-    }
-    img.setAttribute(appendImageAtt, '')
-    img.setAttribute('hidden', 'true')
+  ImageUrls.update(expansion).then(() => {
+    listCardDivs.forEach(div => {
+      let img = div.querySelector('img[' + appendImageAtt + ']')
+      if(img == null) {
+        img = document.createElement('img')
+        div.appendChild(img)
+      }
+      img.setAttribute(appendImageAtt, '')
+      img.setAttribute('hidden', 'true')
 
-    const name = getNameFromListCardDiv(div)
+      const name = getNameFromListCardDiv(div)
 
-    if(ImageUrls.has(name)){
-      const url = ImageUrls.url(name)
-      img.setAttribute('src', url)
-      img.removeAttribute('hidden')
-    }
+      if(ImageUrls.has(name)){
+        const url = ImageUrls.url(name)
+        img.setAttribute('src', url)
+        img.removeAttribute('hidden')
+      }
+    })
   })
 }
 
@@ -88,5 +100,6 @@ const cardListObserver = (
   }
 }
 
+ImageUrls.update('SPG')
 const obs = new MutationObserver((r, o) => cardListObserver(r, o, cardListHandler))
 obs.observe(document, { subtree: true, childList: true, characterDataOldValue: true })
