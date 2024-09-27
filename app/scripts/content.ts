@@ -21,11 +21,8 @@ const ImageUrls = new class {
     if(this.fetched.has(expansion)) {
       return
     }
-    if(!(expansion in DataDict)) {
-      return
-    }
-    const data = await fetchData(expansion)
     this.fetched.add(expansion)
+    const data = await fetchData(expansion)
     this.imageUrls = {...this.imageUrls, ...data}
   }
 
