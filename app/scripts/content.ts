@@ -2,19 +2,11 @@ interface URL_DATA_I {
   [key: string]: string
 }
 
-const DataDict: {[key: string]: string} = {
-  'DSK': 'dsk.json',
-  'BLB': 'blb.json',
-  'SPG': 'spg.json',
-}
-Object.keys(DataDict).forEach(key => {
-  DataDict[key] = 'https://raw.githubusercontent.com/slimemoss/17land-ja/refs/heads/url_data_from_githubraw/public_data/' + DataDict[key]
-});
-
 const appendImageAtt = 'data-17lands-ja-image'
 
 async function fetchData(expansion: string) {
-  const response = await fetch(DataDict[expansion])
+  const url = 'https://raw.githubusercontent.com/slimemoss/17land-ja/refs/heads/url_data_from_githubraw/public_data/' + expansion + '.json'
+  const response = await fetch(url)
   const res: URL_DATA_I = await response.json()
   return res
 }
