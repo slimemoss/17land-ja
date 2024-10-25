@@ -22,7 +22,7 @@ parser.add_argument('output_dir', type=str)
 parser.add_argument('scryfall_sym', type=str)
 parser.add_argument('lands17_sym', type=str)
 parser.add_argument('-c', '--clear_cache', action='store_true',
-                    help='17landsのデータをオンライン上から再取得します。')
+                    help='scryfallのデータをオンライン上から再取得します。新セット実装時に使用してください。')
 args = parser.parse_args()
 
 output_dir = args.output_dir
