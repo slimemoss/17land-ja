@@ -46,9 +46,10 @@ def get_urls(use_cache=True) -> dict[str, str]:
             res[setid] = {}
 
         if d.image_uris and d.image_uris.small:
-            res[setid].setdefault(d.name, d.image_uris.small)
+            res[setid][d.name] = d.image_uris.small
 
-            if d.card_faces:
-                res[setid].setdefault(d.card_faces[0].name, d.image_uris.small)
+        if d.card_faces:
+            if d.card_faces[0].image_uris and d.card_faces[0].image_uris.small:
+                res[setid][d.card_faces[0].name] = d.card_faces[0].image_uris.small
 
     return res
