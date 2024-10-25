@@ -10,7 +10,7 @@ from scheme import Layout, SchemeElement
 def read_scryfall(use_cache=True):
     def dl_scryfall():
 
-        url = 'https://api.scryfall.com/bulk-data/unique_artwork'
+        url = 'https://api.scryfall.com/bulk-data/default_cards'
         d = requests.get(url).json()
 
         bluk_url = d['download_uri']
@@ -46,6 +46,9 @@ def get_urls(use_cache=True) -> dict[str, str]:
             res[setid] = {}
 
         if d.image_uris and d.image_uris.small:
-            res[setid][d.name] = d.image_uris.small
+            res[setid].setdefault(d.name, d.image_uris.small)
+
+            if d.card_faces:
+                res[setid].setdefault(d.card_faces[0].name, d.image_uris.small)
 
     return res

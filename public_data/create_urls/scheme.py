@@ -108,7 +108,7 @@ class CardFace(BaseModel):
     object: CardFaceObject
     name: str
     mana_cost: str
-    type_line: str
+    type_line: Optional[str] = None
     oracle_text: str
     power: Optional[Union[HandModifierEnum, int]] = None
     toughness: Optional[Union[HandModifierEnum, int]] = None
@@ -181,6 +181,7 @@ class ImageStatus(Enum):
     HIGHRES_SCAN = "highres_scan"
     LOWRES = "lowres"
     PLACEHOLDER = "placeholder"
+    MISSING = "missing"
 
 
 class Lang(Enum):
@@ -194,6 +195,7 @@ class Lang(Enum):
     IT = "it"
     JA = "ja"
     KO = "ko"
+    LA = "la"
     PH = "ph"
     PT = "pt"
     RU = "ru"
@@ -244,85 +246,6 @@ class Preview(BaseModel):
     previewed_at: datetime
 
 
-class PromoType(Enum):
-    ALCHEMY = "alchemy"
-    ARENALEAGUE = "arenaleague"
-    BOOSTERFUN = "boosterfun"
-    BOXTOPPER = "boxtopper"
-    BRAWLDECK = "brawldeck"
-    BRINGAFRIEND = "bringafriend"
-    BUNDLE = "bundle"
-    BUYABOX = "buyabox"
-    COMMANDERPARTY = "commanderparty"
-    CONCEPT = "concept"
-    CONFETTIFOIL = "confettifoil"
-    CONVENTION = "convention"
-    DATESTAMPED = "datestamped"
-    DOSSIER = "dossier"
-    DOUBLEEXPOSURE = "doubleexposure"
-    DOUBLERAINBOW = "doublerainbow"
-    DRACULASERIES = "draculaseries"
-    DRAFTWEEKEND = "draftweekend"
-    DUELS = "duels"
-    EMBOSSED = "embossed"
-    EVENT = "event"
-    FNM = "fnm"
-    GALAXYFOIL = "galaxyfoil"
-    GAMEDAY = "gameday"
-    GIFTBOX = "giftbox"
-    GILDED = "gilded"
-    GLOSSY = "glossy"
-    GODZILLASERIES = "godzillaseries"
-    HALOFOIL = "halofoil"
-    IMAGINE = "imagine"
-    INSTORE = "instore"
-    INTROPACK = "intropack"
-    INVISIBLEINK = "invisibleink"
-    JPWALKER = "jpwalker"
-    JUDGEGIFT = "judgegift"
-    LEAGUE = "league"
-    MAGNIFIED = "magnified"
-    MEDIAINSERT = "mediainsert"
-    NEONINK = "neonink"
-    OILSLICK = "oilslick"
-    OPENHOUSE = "openhouse"
-    PLANESWALKERDECK = "planeswalkerdeck"
-    PLASTIC = "plastic"
-    PLAYERREWARDS = "playerrewards"
-    PLAYPROMO = "playpromo"
-    PLAYTEST = "playtest"
-    PORTRAIT = "portrait"
-    POSTER = "poster"
-    PREMIERESHOP = "premiereshop"
-    PRERELEASE = "prerelease"
-    PROMOPACK = "promopack"
-    RAINBOWFOIL = "rainbowfoil"
-    RAISEDFOIL = "raisedfoil"
-    RAVNICACITY = "ravnicacity"
-    REBALANCED = "rebalanced"
-    RELEASE = "release"
-    RIPPLEFOIL = "ripplefoil"
-    SCHINESEALTART = "schinesealtart"
-    SCROLL = "scroll"
-    SERIALIZED = "serialized"
-    SETEXTENSION = "setextension"
-    SETPROMO = "setpromo"
-    SILVERFOIL = "silverfoil"
-    STAMPED = "stamped"
-    STARTERDECK = "starterdeck"
-    STEPANDCOMPLEAT = "stepandcompleat"
-    STORECHAMPIONSHIP = "storechampionship"
-    SURGEFOIL = "surgefoil"
-    TEXTURED = "textured"
-    THEMEPACK = "themepack"
-    THICK = "thick"
-    TOURNEY = "tourney"
-    UPSIDEDOWN = "upsidedown"
-    UPSIDEDOWNBACK = "upsidedownback"
-    VAULT = "vault"
-    WIZARDSPLAYNETWORK = "wizardsplaynetwork"
-
-
 class PurchaseUris(BaseModel):
     tcgplayer: str
     cardmarket: str
@@ -369,6 +292,7 @@ class SetType(Enum):
     MASTERPIECE = "masterpiece"
     MASTERS = "masters"
     MEMORABILIA = "memorabilia"
+    MINIGAME = "minigame"
     PLANECHASE = "planechase"
     PREMIUM_DECK = "premium_deck"
     PROMO = "promo"
@@ -384,7 +308,7 @@ class SchemeElement(BaseModel):
     id: UUID
     multiverse_ids: List[int]
     name: str
-    lang: Lang
+    lang: Optional[Lang] = None
     released_at: datetime
     uri: str
     scryfall_uri: str
@@ -450,7 +374,6 @@ class SchemeElement(BaseModel):
     all_parts: Optional[List[AllPart]] = None
     preview: Optional[Preview] = None
     security_stamp: Optional[SecurityStamp] = None
-    promo_types: Optional[List[PromoType]] = None
     watermark: Optional[str] = None
     frame_effects: Optional[List[FrameEffect]] = None
     loyalty: Optional[str] = None
