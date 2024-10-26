@@ -4,7 +4,7 @@ import pathlib
 import requests
 from pydantic import TypeAdapter
 
-from scheme import Layout, SchemeElement
+from scheme import BorderColor, Layout, SchemeElement
 
 
 def read_scryfall(use_cache=True):
@@ -40,6 +40,8 @@ def get_urls(use_cache=True) -> dict[str, str]:
     for d in scryfall_data:
         if d.layout == Layout.TOKEN:
             continue
+        if d.border_color != BorderColor.BLACK:
+            continue
 
         setid = d.set
         if setid not in res:
@@ -49,7 +51,8 @@ def get_urls(use_cache=True) -> dict[str, str]:
             res[setid][d.name] = d.image_uris.small
 
         if d.card_faces:
-            if d.card_faces[0].image_uris and d.card_faces[0].image_uris.small:
-                res[setid][d.card_faces[0].name] = d.card_faces[0].image_uris.small
+            face = d.card_faces[0]
+            if face.image_uris and face.image_uris.small:
+                res[setid][face.name] = face.image_uris.small
 
     return res
