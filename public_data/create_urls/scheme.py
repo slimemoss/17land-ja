@@ -142,6 +142,7 @@ class FrameEnum(Enum):
 
 
 class FrameEffect(Enum):
+    BORDERLESS = "borderless"
     COLORSHIFTED = "colorshifted"
     COMPANION = "companion"
     COMPASSLANDDFC = "compasslanddfc"
@@ -150,6 +151,7 @@ class FrameEffect(Enum):
     DRAFT = "draft"
     ETCHED = "etched"
     EXTENDEDART = "extendedart"
+    ENCHANTMENT = "enchantment"
     FANDFC = "fandfc"
     FULLART = "fullart"
     INVERTED = "inverted"
