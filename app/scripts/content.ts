@@ -5,7 +5,7 @@ interface URL_DATA_I {
 const appendImageAtt = 'data-17lands-ja-image'
 
 async function fetchData(expansion: string) {
-  const url = 'https://raw.githubusercontent.com/slimemoss/17land-ja/refs/heads/url_data_from_githubraw/public_data/' + expansion + '.json'
+  const url = 'https://raw.githubusercontent.com/slimemoss/17land-ja/refs/heads/master/public_data/' + expansion + '.json'
   const response = await fetch(url)
   const res: URL_DATA_I = await response.json()
   return res
