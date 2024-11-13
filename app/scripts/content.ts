@@ -89,6 +89,11 @@ const cardListObserver = (
   }
 }
 
-ImageUrls.update('SPG')
-const obs = new MutationObserver((r, o) => cardListObserver(r, o, cardListHandler))
-obs.observe(document, { subtree: true, childList: true, characterDataOldValue: true })
+const main = () => {
+  ImageUrls.update('SPG').then(() => {
+    const obs = new MutationObserver((r, o) => cardListObserver(r, o, cardListHandler))
+    obs.observe(document, { subtree: true, childList: true, characterDataOldValue: true })
+  })
+}
+
+main()
