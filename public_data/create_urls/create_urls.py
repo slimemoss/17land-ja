@@ -42,7 +42,7 @@ def get_urls(use_cache=True) -> dict[str, str]:
             continue
         if d.border_color != BorderColor.BLACK:
             continue
-        if not d.booster:
+        if (not d.booster) and (d.set != 'pio'):
             continue
 
         setid = d.set
