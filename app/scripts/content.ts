@@ -7,7 +7,7 @@ const appendImageAtt = 'data-17lands-ja-image'
 async function fetchData(expansion: string) {
   const url = 'https://raw.githubusercontent.com/slimemoss/17land-ja/refs/heads/master/public_data/' + expansion + '.json'
   const response = await fetch(url)
-  const res: URL_DATA_I = await response.json()
+  const res: {[key: string]: string} = await response.json()
   return res
 }
 
@@ -24,6 +24,14 @@ const ImageUrls = new class {
     this.fetched.add(expansion)
     const data = await fetchData(expansion)
     this.imageUrls = {...this.imageUrls, ...data}
+
+    const empty: {[key: string]: string} = {}
+    const multi = Object.keys(data)
+          .filter(key => key.includes(' // '))
+          .reduce((prev, curr) => {
+            return {...prev, [curr.split(' // ')[0]]: data[curr]}
+          }, empty)
+    this.imageUrls = {...this.imageUrls, ...multi}
   }
 
   has(name: string) {
@@ -35,41 +43,44 @@ const ImageUrls = new class {
   }
 }
 
-const getNameFromListCardDiv = (div: Element) => {
-  return div.querySelector('div.list_card_name')?.textContent ?? ''
-}
-
 const getExpansioin = () => {
   const select = document.querySelector<HTMLSelectElement>('select#expansion')
   return select?.value
 }
 
 const cardListHandler = () => {
-  const listCardDivs = document.querySelectorAll('div.list_card')
   const expansion = getExpansioin()
   if(expansion == undefined) {
     return
   }
 
   ImageUrls.update(expansion).then(() => {
-    listCardDivs.forEach(div => {
-      let img = div.querySelector('img[' + appendImageAtt + ']')
-      if(img == null) {
-        img = document.createElement('img')
-        div.appendChild(img)
-      }
-      img.setAttribute(appendImageAtt, '')
-      img.setAttribute('hidden', 'true')
+    document.querySelectorAll('div.sc-hLznAM').forEach(box => {
+      box.querySelectorAll<HTMLDivElement>('div.sc-glIahl').forEach(card => {
+        let img = card.querySelector('img[' + appendImageAtt + ']')
+        if(img == null) {
+          img = document.createElement('img')
+          card.appendChild(img)
+        }
+        img.setAttribute(appendImageAtt, '')
 
-      const name = getNameFromListCardDiv(div)
-
-      if(ImageUrls.has(name)){
-        const url = ImageUrls.url(name)
-        img.setAttribute('src', url)
-        img.removeAttribute('hidden')
-      }
+        const name = card.querySelector('div.sc-gACFrS')?.textContent
+        if(name) {
+          const url = ImageUrls.url(name)
+          img.setAttribute('src', url)
+          img.removeAttribute('hidden')
+          card.style.backgroundImage = ''
+        }
+      })
     })
   })
+}
+
+const observe = (obs: MutationObserver) => {
+  obs.observe(document, { subtree: true, childList: true, characterDataOldValue: true })
+}
+const disconnect = (obs: MutationObserver) => {
+  obs.disconnect()
 }
 
 const cardListObserver = (
@@ -78,21 +89,31 @@ const cardListObserver = (
 ) => {
 
   const isChange = recoreds.reduce((prev, curr) => {
-    return (
-      curr.target.parentElement?.className == 'list_card_name' ||
-      curr.target.parentElement?.querySelector('div.list_card_name') != null
-    ) || prev
+    const shouldHandle = (curr: MutationRecord) => {
+      const target = curr.target
+      if (target instanceof Element) {
+        return target.className == 'sc-hLznAM gvemIP' ||
+               target.className == 'sc-ehYhRg kRLuxg'
+      } else {
+        return false
+      }
+    }
+    return shouldHandle(curr) || prev
   }, false)
 
   if(isChange) {
+    disconnect(obs)
+    console.log('update')
     callback(recoreds, obs)
+    console.log('end update')
+    observe(obs)
   }
 }
 
 const main = () => {
   ImageUrls.update('SPG').then(() => {
     const obs = new MutationObserver((r, o) => cardListObserver(r, o, cardListHandler))
-    obs.observe(document, { subtree: true, childList: true, characterDataOldValue: true })
+    observe(obs)
   })
 }
 
