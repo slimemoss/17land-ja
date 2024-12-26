@@ -8,7 +8,7 @@
     "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
   },
   "appDescription": {
-    "message": "17landsを日本人向けに使いやすくする拡張機能です。",
+    "message": "17landsのCardDataページで、常にカード画像を表示するようにします。",
     "description": "The description of the application"
   }
 }
