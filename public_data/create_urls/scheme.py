@@ -32,6 +32,7 @@ class BorderColor(Enum):
     GOLD = "gold"
     SILVER = "silver"
     WHITE = "white"
+    YELLOW = "yellow"
 
 
 class ColorIdentity(Enum):
