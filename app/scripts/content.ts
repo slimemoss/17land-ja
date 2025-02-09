@@ -1,3 +1,13 @@
+// 17lands.comアップデートのたびに、更新する値
+//   カード名・GIHが入ったdiv 挿絵用の長いstyleがあるやつ
+const CSS_QUERY_CARD_BOX = 'div.sc-hIiahf'
+//   カード名のdiv
+const CSS_QUERY_CARDNAME = 'div.sc-gAigJI'
+//   CSS_QUERY_OBSERVEを見つけるためのprint debug
+const DEBUG_FOR_CSS_QUERY_OBSERVE = false
+//   テーブル更新操作のたびに変化があるdiv
+const CSS_QUERY_OBSERVE = ['sc-hYqwXO eMZNdb']
+
 interface URL_DATA_I {
   [key: string]: string
 }
@@ -54,24 +64,26 @@ const cardListHandler = () => {
     return
   }
 
-  ImageUrls.update(expansion).then(() => {
-    document.querySelectorAll('div.sc-hLznAM').forEach(box => {
-      box.querySelectorAll<HTMLDivElement>('div.sc-glIahl').forEach(card => {
-        let img = card.querySelector('img[' + appendImageAtt + ']')
-        if(img == null) {
-          img = document.createElement('img')
-          card.appendChild(img)
-        }
-        img.setAttribute(appendImageAtt, '')
+  if (DEBUG_FOR_CSS_QUERY_OBSERVE) {
+    console.log('update')
+  }
 
-        const name = card.querySelector('div.sc-gACFrS')?.textContent
-        if(name) {
-          const url = ImageUrls.url(name)
-          img.setAttribute('src', url)
-          img.removeAttribute('hidden')
-          card.style.backgroundImage = ''
-        }
-      })
+  ImageUrls.update(expansion).then(() => {
+    document.querySelectorAll<HTMLDivElement>(CSS_QUERY_CARD_BOX).forEach(card => {
+      let img = card.querySelector('img[' + appendImageAtt + ']')
+      if(img == null) {
+        img = document.createElement('img')
+        card.appendChild(img)
+      }
+      img.setAttribute(appendImageAtt, '')
+
+      const name = card.querySelector(CSS_QUERY_CARDNAME)?.textContent
+      if(name) {
+        const url = ImageUrls.url(name)
+        img.setAttribute('src', url)
+        img.removeAttribute('hidden')
+        card.style.backgroundImage = ''
+      }
     })
   })
 }
@@ -92,8 +104,11 @@ const cardListObserver = (
     const shouldHandle = (curr: MutationRecord) => {
       const target = curr.target
       if (target instanceof Element) {
-        return target.className == 'sc-hLznAM gvemIP' ||
-               target.className == 'sc-ehYhRg kRLuxg'
+        if (DEBUG_FOR_CSS_QUERY_OBSERVE) {
+          console.log(target.className)
+        }
+        return target.className == 'container' ||
+               CSS_QUERY_OBSERVE.includes(target.className)
       } else {
         return false
       }
@@ -103,9 +118,7 @@ const cardListObserver = (
 
   if(isChange) {
     disconnect(obs)
-    console.log('update')
     callback(recoreds, obs)
-    console.log('end update')
     observe(obs)
   }
 }
