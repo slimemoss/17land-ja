@@ -1,18 +1,32 @@
 // 17lands.comアップデートのたびに、更新する値
 //   カード名・GIHが入ったdiv 挿絵用の長いstyleがあるやつ
-const CSS_QUERY_CARD_BOX = 'div.sc-hIiahf'
+let CSS_QUERY_CARD_BOX = 'div.sc-hIiahf'
 //   カード名のdiv
-const CSS_QUERY_CARDNAME = 'div.sc-gAigJI'
+let CSS_QUERY_CARDNAME = 'div.sc-gAigJI'
 //   CSS_QUERY_OBSERVEを見つけるためのprint debug
-const DEBUG_FOR_CSS_QUERY_OBSERVE = false
+let DEBUG_FOR_CSS_QUERY_OBSERVE = false
 //   テーブル更新操作のたびに変化があるdiv
-const CSS_QUERY_OBSERVE = ['sc-hYqwXO eMZNdb']
+let CSS_QUERY_OBSERVE = ['sc-hYqwXO eMZNdb']
+
+const appendImageAtt = 'data-17lands-ja-image'
 
 interface URL_DATA_I {
   [key: string]: string
 }
 
-const appendImageAtt = 'data-17lands-ja-image'
+interface CssQueries {
+  CSS_QUERY_CARD_BOX: string
+  CSS_QUERY_CARDNAME: string
+  CSS_QUERY_OBSERVE: string[]
+}
+async function fetchCssQueries() {
+  const url = 'https://raw.githubusercontent.com/slimemoss/17land-ja/refs/heads/master/public_data/webpage_param.json'
+  const response = await fetch(url)
+  const res: CssQueries = await response.json()
+  CSS_QUERY_CARDNAME = res.CSS_QUERY_CARDNAME
+  CSS_QUERY_CARD_BOX = res.CSS_QUERY_CARD_BOX
+  CSS_QUERY_OBSERVE = res.CSS_QUERY_OBSERVE
+}
 
 async function fetchData(expansion: string) {
   const url = 'https://raw.githubusercontent.com/slimemoss/17land-ja/refs/heads/master/public_data/' + expansion + '.json'
@@ -58,9 +72,15 @@ const getExpansioin = () => {
   return select?.value
 }
 
-const cardListHandler = () => {
+function cardListHandler(_: MutationRecord[], obs: MutationObserver) {
+  disconnect(obs)
+  updatePage()
+  observe(obs)
+}
+
+async function updatePage() {
   const expansion = getExpansioin()
-  if(expansion == undefined) {
+  if(expansion == undefined || expansion == '') {
     return
   }
 
@@ -68,23 +88,23 @@ const cardListHandler = () => {
     console.log('update')
   }
 
-  ImageUrls.update(expansion).then(() => {
-    document.querySelectorAll<HTMLDivElement>(CSS_QUERY_CARD_BOX).forEach(card => {
-      let img = card.querySelector('img[' + appendImageAtt + ']')
-      if(img == null) {
-        img = document.createElement('img')
-        card.appendChild(img)
-      }
-      img.setAttribute(appendImageAtt, '')
+  await ImageUrls.update('SPG')
+  await ImageUrls.update(expansion)
+  document.querySelectorAll<HTMLDivElement>(CSS_QUERY_CARD_BOX).forEach(card => {
+    let img = card.querySelector('img[' + appendImageAtt + ']')
+    if(img == null) {
+      img = document.createElement('img')
+      card.appendChild(img)
+    }
+    img.setAttribute(appendImageAtt, '')
 
-      const name = card.querySelector(CSS_QUERY_CARDNAME)?.textContent
-      if(name) {
-        const url = ImageUrls.url(name)
-        img.setAttribute('src', url)
-        img.removeAttribute('hidden')
-        card.style.backgroundImage = ''
-      }
-    })
+    const name = card.querySelector(CSS_QUERY_CARDNAME)?.textContent
+    if(name) {
+      const url = ImageUrls.url(name)
+      img.setAttribute('src', url)
+      img.removeAttribute('hidden')
+      card.style.backgroundImage = ''
+    }
   })
 }
 
@@ -117,17 +137,15 @@ const cardListObserver = (
   }, false)
 
   if(isChange) {
-    disconnect(obs)
     callback(recoreds, obs)
-    observe(obs)
   }
 }
 
-const main = () => {
-  ImageUrls.update('SPG').then(() => {
-    const obs = new MutationObserver((r, o) => cardListObserver(r, o, cardListHandler))
-    observe(obs)
-  })
+async function main() {
+  fetchCssQueries()
+  const obs = new MutationObserver((r, o) => cardListObserver(r, o, cardListHandler))
+  observe(obs)
+  cardListHandler([], obs)
 }
 
 main()
