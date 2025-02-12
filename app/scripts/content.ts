@@ -58,7 +58,7 @@ const getExpansioin = () => {
   return select?.value
 }
 
-const cardListHandler = () => {
+async function cardListHandler() {
   const expansion = getExpansioin()
   if(expansion == undefined) {
     return
@@ -68,23 +68,23 @@ const cardListHandler = () => {
     console.log('update')
   }
 
-  ImageUrls.update(expansion).then(() => {
-    document.querySelectorAll<HTMLDivElement>(CSS_QUERY_CARD_BOX).forEach(card => {
-      let img = card.querySelector('img[' + appendImageAtt + ']')
-      if(img == null) {
-        img = document.createElement('img')
-        card.appendChild(img)
-      }
-      img.setAttribute(appendImageAtt, '')
+  await ImageUrls.update('SPG')
+  await ImageUrls.update(expansion)
+  document.querySelectorAll<HTMLDivElement>(CSS_QUERY_CARD_BOX).forEach(card => {
+    let img = card.querySelector('img[' + appendImageAtt + ']')
+    if(img == null) {
+      img = document.createElement('img')
+      card.appendChild(img)
+    }
+    img.setAttribute(appendImageAtt, '')
 
-      const name = card.querySelector(CSS_QUERY_CARDNAME)?.textContent
-      if(name) {
-        const url = ImageUrls.url(name)
-        img.setAttribute('src', url)
-        img.removeAttribute('hidden')
-        card.style.backgroundImage = ''
-      }
-    })
+    const name = card.querySelector(CSS_QUERY_CARDNAME)?.textContent
+    if(name) {
+      const url = ImageUrls.url(name)
+      img.setAttribute('src', url)
+      img.removeAttribute('hidden')
+      card.style.backgroundImage = ''
+    }
   })
 }
 
@@ -124,10 +124,8 @@ const cardListObserver = (
 }
 
 const main = () => {
-  ImageUrls.update('SPG').then(() => {
-    const obs = new MutationObserver((r, o) => cardListObserver(r, o, cardListHandler))
-    observe(obs)
-  })
+  const obs = new MutationObserver((r, o) => cardListObserver(r, o, cardListHandler))
+  observe(obs)
 }
 
 main()
