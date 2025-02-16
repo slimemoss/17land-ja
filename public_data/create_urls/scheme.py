@@ -61,6 +61,7 @@ class Layout(Enum):
     CASE = "case"
     CLASS = "class"
     DOUBLE_FACED_TOKEN = "double_faced_token"
+    DOUBLE_SIDED = "double_sided"
     EMBLEM = "emblem"
     FLIP = "flip"
     HOST = "host"

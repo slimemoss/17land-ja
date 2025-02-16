@@ -40,9 +40,9 @@ def get_urls(use_cache=True) -> dict[str, str]:
     for d in scryfall_data:
         if d.layout == Layout.TOKEN:
             continue
-        if d.border_color != BorderColor.BLACK:
+        if (d.border_color != BorderColor.BLACK) and (d.set != 'spg'):
             continue
-        if (not d.booster) and (d.set != 'pio'):
+        if (not d.booster) and (d.set != 'pio') and (d.set != 'spg'):
             continue
 
         setid = d.set
