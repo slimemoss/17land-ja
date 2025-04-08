@@ -195,6 +195,7 @@ class Lang(Enum):
     ES = "es"
     FR = "fr"
     GRC = "grc"
+    GYA = "qya"
     HE = "he"
     IT = "it"
     JA = "ja"
