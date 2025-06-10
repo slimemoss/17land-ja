@@ -163,6 +163,7 @@ class FrameEffect(Enum):
     MOONELDRAZIDFC = "mooneldrazidfc"
     NYXTOUCHED = "nyxtouched"
     ORIGINPWDFC = "originpwdfc"
+    PLACEHOLDERIMAGE = "placeholderimage"
     SHATTEREDGLASS = "shatteredglass"
     SHOWCASE = "showcase"
     SNOW = "snow"
