@@ -1,8 +1,8 @@
 {
-  "name": "auto-upload-test",
-  "displayName": "Auto upload test",
-  "version": "0.0.5",
-  "description": "A basic Plasmo extension.",
+  "name": "17landsja",
+  "displayName": "17lands japanese",
+  "version": "1.4.0",
+  "description": "17landsのCardDataページで、常にカード画像を表示するようにします。",
   "author": "slimemoss",
   "scripts": {
     "dev": "plasmo dev",
@@ -24,5 +24,8 @@
     "@types/react-dom": "19.1.6",
     "prettier": "3.5.3",
     "typescript": "5.8.3"
+  },
+  "manifest": {
+    "host_permissions": ["https://raw.githubusercontent.com/slimemoss/lands17-ja-set-data/refs/heads/publish/public_data/*"]
   }
 }
