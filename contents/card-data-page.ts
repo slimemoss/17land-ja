@@ -9,7 +9,7 @@
 //   empty          (div)
 //   gih            (div)
 
-import { fetchSetData, imageUrlDatabase } from "./fetch-set-data"
+import { imageUrlDatabase } from "./fetch-set-data"
 
 const xpathResultArray = (parent: Node, xpathStr: string) => {
   const result = document.evaluate(
@@ -87,6 +87,7 @@ export async function updateScrollTable() {
   if(code === undefined) {
     return
   }
+  await imageUrlDatabase.update("spg")
   await imageUrlDatabase.update(code)
 
   const cards = xpathResultArray(scrollTable, "./div/div/div/div")
