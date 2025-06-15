@@ -1,0 +1,14 @@
+{
+  "extensionName": {
+    "message": "17lands japanese",
+    "description": "The name of the application"
+  },
+  "extensionShortName": {
+    "message": "17landsja",
+    "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
+  },
+  "extensionDescription": {
+    "message": "17landsのCardDataページで、常にカード画像を表示するようにします。",
+    "description": "The description of the application"
+  }
+}

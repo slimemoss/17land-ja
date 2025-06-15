@@ -1,6 +1,7 @@
 import type { PlasmoCSConfig } from "plasmo"
-import { observePageTransition } from "./observe-page-transition"
-import { updateScrollTable, isChageTable } from "./card-data-page"
+import { isChageTable, updateScrollTable } from "~script/card-data-page";
+import { observePageTransition } from "~script/observe-page-transition";
+
 
 export const config: PlasmoCSConfig = {
   matches: ["*://www.17lands.com/*"],

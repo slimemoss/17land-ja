@@ -2,7 +2,7 @@
   "name": "17landsja",
   "displayName": "17lands japanese",
   "version": "1.4.0",
-  "description": "17landsのCardDataページで、常にカード画像を表示するようにします。",
+  "description": "__MSG_extensionDescription__",
   "author": "slimemoss",
   "scripts": {
     "dev": "plasmo dev",
@@ -26,6 +26,8 @@
     "typescript": "5.8.3"
   },
   "manifest": {
+    "name": "__MSG_extensionName__",
+    "default_locale": "ja",
     "host_permissions": ["https://raw.githubusercontent.com/slimemoss/lands17-ja-set-data/refs/heads/publish/public_data/*"]
   }
 }
