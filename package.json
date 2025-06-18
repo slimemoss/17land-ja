@@ -1,7 +1,7 @@
 {
   "name": "17landsja",
   "displayName": "17lands japanese",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "__MSG_extensionDescription__",
   "author": "slimemoss",
   "scripts": {
@@ -10,6 +10,7 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "plasmo": "^0.90.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -28,6 +29,8 @@
   "manifest": {
     "name": "__MSG_extensionName__",
     "default_locale": "ja",
-    "host_permissions": ["https://raw.githubusercontent.com/slimemoss/lands17-ja-set-data/refs/heads/publish/public_data/*"]
+    "host_permissions": [
+      "https://raw.githubusercontent.com/slimemoss/lands17-ja-set-data/refs/heads/publish/public_data/*"
+    ]
   }
 }
